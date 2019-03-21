@@ -99,7 +99,7 @@
                 "type": "Microsoft.Resources/deployments",
                 "apiVersion": "2017-05-10",
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/VirtualNetwork"
+                    "Microsoft.Resources/deployments/VirtualNetworkWithDNS"
                 ],
                 "properties": {
                     "mode": "Incremental",
@@ -174,7 +174,7 @@
                 "type": "Microsoft.Resources/deployments",
                 "apiVersion": "2017-05-10",
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/VirtualNetwork2"
+                    "Microsoft.Resources/deployments/VirtualNetworkWithDNS2"
                 ],
                 "resourceGroup": "[parameters('secondResourceGroup')]",
                 "properties": {
