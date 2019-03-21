@@ -37,13 +37,6 @@
       },
       "defaultValue": "https://cloudworkshop.blob.core.windows.net/building-resilient-iaas-architecture/AdventureWorks2012.bak"
     },
-    "CloudShopInstallscriptUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "script to execute"
-      },
-      "defaultValue": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master/script-extensions/deploy-cloudshop.ps1"
-    },
     "CloudShopDBInstallscriptUrl": {
       "type": "string",
       "metadata": {
@@ -58,11 +51,6 @@
       },
       "defaultValue": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master/script-extensions/configure-sql.ps1"
     },
-    "WebVMName": {
-      "type": "string",
-      "defaultValue": "CloudShopWeb2",
-      "minLength": 1
-    },
     "SQLVMName": {
       "type": "string",
       "defaultValue": "CloudShopSQL2",
@@ -76,34 +64,21 @@
 
   },
   "variables": {
-    "VNETSubnet1Name": "Apps",
     "VNETSubnet2Name": "Data",
     "VNETNAME": "VNET2",
     "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('VNETNAME'))]",
-    "CloudShopInstallScriptFileName": "deploy-cloudshop.ps1",
-    "CloudShopInstallScriptParameters": "[concat(' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'), ' -cloudshopurl ', parameters('CloudShopDownloadUrl'))]",
     "CloudShopDBInstallScriptFileName": "deploy-cloudshop-db.ps1",
     "CloudShopDBInstallScriptParameters": "[concat(' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'), ' -dbsource ', parameters('CloudShopDBDownloadUrl'), ' -sqlConfigUrl ', parameters('SQLConfigscriptUrl'))]",
     "vmstorageName": "[concat('chqdisks', uniqueString(resourceGroup().id))]",
-    "WindowsOSVersion": "2016-Datacenter",
-    "WindowsImagePublisher": "MicrosoftWindowsServer",
-    "WindowsImageOffer": "WindowsServer",
     "SQLSKU": "Web",
     "SQLImagePublisher": "MicrosoftSQLServer",
     "SQLImageOffer": "SQL2014SP2-WS2012R2",
-    "WebOSDiskName": "WebOSDisk",
-    "WebVM-2OSDiskName": "WebOSDisk2",
-    "WebVmSize": "Standard_DS2_v2",
-    "WebSubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet1Name'))]",
-    "WebStorageAccountContainerName": "vhds",
-    "WebNicName": "[concat(parameters('WebVMName'), 'NetworkInterface')]",
     "SQLOSDiskName": "SQLOSDisk2",
     "SQLVmSize": "Standard_DS2_v2",
     "SQLSubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
     "SQLStorageAccountContainerName": "vhds",
     "SQLNicName": "[concat(parameters('SQLVMName'), 'NetworkInterface')]",
     "scriptFolder": ".",
-    "webipName": "webip",
     "sqlipName": "sqlip",
     "SQL3SKU": "Web",
     "SQL3ImagePublisher": "MicrosoftSQLServer",
@@ -112,8 +87,7 @@
     "SQL3OSDiskName": "SQLOSDisk2",
     "SQL3VmSize": "Standard_DS2_v2",
     "SQL3SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
-    "SQL3StorageAccountContainerName": "vhds",
-    "SQL3NicName": "[concat(parameters('SQLVMName'), 'NetworkInterface')]"
+    "SQL3NicName": "[concat(parameters('SQL3VMName'), 'NetworkInterface')]"
 
   },
   "resources": [
