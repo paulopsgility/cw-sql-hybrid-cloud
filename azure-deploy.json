@@ -2,6 +2,13 @@
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
         "parameters": {
+            "secondResourceGroup": {
+                "type": "string",
+                "defaultValue": "CloudShop2",
+                "metadata": {
+                    "description": "The name of the resource group that will host the DR site"
+                }
+            },
             "adminUsername": {
                 "type": "string",
                 "defaultValue": "demouser",
@@ -27,7 +34,7 @@
         "variables": {
             "baseUri": "https://raw.githubusercontent.com/opsgility/cw-building-resilient-iaas-architecture/master/",
             "ADInstallScript":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1",
-            "ADJoinScript":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/domain-join.ps1"
+            "ADInstallScript2":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1",
         },
         "resources": [
             {
@@ -99,6 +106,136 @@
                     "templateLink": {
                         "uri": "[concat(variables('baseUri'), '/', 'nested-templates/CloudShopRG.json')]",
                         "contentVersion": "1.0.0.0"
+                    }
+                }
+            },
+            {
+                "name": "VirtualNetwork2",
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2016-09-01",
+                "dependsOn": [],
+                "resourceGroup": "[parameters('secondResourceGroup')]",
+                "properties": {
+                    "mode": "Incremental",
+                    "templateLink": {
+                        "uri": "[concat(variables('baseUri'), '/', 'nested-templates/vnet2.json')]",
+                        "contentVersion": "1.0.0.0"
+                    }
+                }
+            },
+            {
+                "name": "ActiveDirectory2",
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2016-09-01",
+                "dependsOn": [
+                    "Microsoft.Resources/deployments/VirtualNetwork2"
+                ],
+                "resourceGroup": "[parameters('secondResourceGroup')]",
+                "properties": {
+                    "mode": "Incremental",
+                    "templateLink": {
+                        "uri": "[concat(variables('baseUri'), '/', 'nested-templates/active-directory2.json')]",
+                        "contentVersion": "1.0.0.0"
+                    },
+                    "parameters": {
+                        "adminUserName": {
+                            "value": "[parameters('adminUserName')]"
+                        },
+                        "adminPassword": {
+                            "value": "[parameters('adminPassword')]"
+                        },
+                        "domainName": {
+                            "value": "[parameters('domainName')]"
+                        },
+                        "adInstallScriptUrl": {
+                            "value": "[variables('ADInstallScript2')]"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "VirtualNetworkWithDNS2",
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2016-09-01",
+                "dependsOn": [
+                    "Microsoft.Resources/deployments/ActiveDirectory2"
+                ],
+                "resourceGroup": "[parameters('secondResourceGroup')]",
+                "properties": {
+                    "mode": "Incremental",
+                    "templateLink": {
+                        "uri": "[concat(variables('baseUri'), '/', 'nested-templates/vnet-with-dns2.json')]",
+                        "contentVersion": "1.0.0.0"
+                    }
+                }
+            },
+            {
+                "name": "CloudShop2",
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2016-09-01",
+                "dependsOn": [
+                    "Microsoft.Resources/deployments/VirtualNetwork2"
+                ],
+                "resourceGroup": "[parameters('secondResourceGroup')]",
+                "properties": {
+                    "mode": "Incremental",
+                    "templateLink": {
+                        "uri": "[concat(variables('baseUri'), '/', 'nested-templates/CloudShopRG2.json')]",
+                        "contentVersion": "1.0.0.0"
+                    }
+                }
+            },
+            {
+                "type": "Microsoft.Resources/deployments",
+                "name": "UpdateVNetPeeringToGround",
+                "apiVersion": "2016-02-01",
+                "dependsOn": [
+                    "Microsoft.Resources/deployments/VirtualNetwork"
+                ],
+                "properties": {
+                    "mode": "Incremental",
+                    "templateLink": {
+                        "uri": "[concat(variables('baseUri'), '/', 'nested-templates/vnet-peering.json')]",
+                        "contentVersion": "1.0.0.0"
+                    },
+                    "parameters": {
+                        "existingRemoteVirtualNetworkResourceGroupName": {
+                            "value": "[parameters('secondResourceGroup')]" 
+                        },
+                        "existingRemoteVirtualNetworkName": {
+                            "value": "VNET2"
+                        },
+                        "existingLocalVirtualNetworkName": {
+                            "value": "VNET1"
+                        }
+                    }
+                }
+            },
+            {
+                "type": "Microsoft.Resources/deployments",
+                "name": "UpdateVNetPeeringToCloud",
+                "apiVersion": "2017-05-10",
+                "resourceGroup": "[parameters('secondResourceGroup')]",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetPeeringToGround')]",
+                    "Microsoft.Resources/deployments/VirtualNetwork2"
+                ],
+                "properties": {
+                    "mode": "Incremental",
+                    "templateLink": {
+                        "uri": "[concat(variables('baseUri'), '/', 'nested-templates/vnet-peering2.json')]",
+                        "contentVersion": "1.0.0.0"
+                    },
+                    "parameters": {
+                        "existingRemoteVirtualNetworkResourceGroupName": {
+                            "value": "[resourceGroup().name]"
+                        },
+                        "existingRemoteVirtualNetworkName": {
+                            "value": "VNET1"
+                        },
+                        "existingLocalVirtualNetworkName": {
+                            "value": "VNET2"
+                        }
                     }
                 }
             }

@@ -1,0 +1,59 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  },
+  "variables": {
+    "VNETNAME": "VNET2",
+    "DNSIP": "172.16.2.4",
+    "VNETPrefix": "172.16.0.0/16",
+    "VNETSubnet1Name": "Apps",
+    "VNETSubnet1Prefix": "172.16.0.0/24",
+    "VNETSubnet3Name": "Data",
+    "VNETSubnet3Prefix": "172.16.1.0/24",
+    "VNETSubnet2Name": "Identity",
+    "VNETSubnet2Prefix": "172.16.2.0/24"
+  },
+
+  "resources": [
+    {
+      "name": "VNET2",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "VNET2"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('VNETPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('VNETSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('VNETSubnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('VNETSubnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('VNETSubnet2Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('VNETSubnet3Name')]",
+            "properties": {
+              "addressPrefix": "[variables('VNETSubnet3Prefix')]"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {}
+
+  }
