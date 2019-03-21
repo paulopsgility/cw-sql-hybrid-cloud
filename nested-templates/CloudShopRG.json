@@ -83,9 +83,9 @@
     "WindowsOSVersion": "2016-Datacenter",
     "WindowsImagePublisher": "MicrosoftWindowsServer",
     "WindowsImageOffer": "WindowsServer",
-    "SQLSKU": "Web",
+    "SQLSKU": "SQLDEV",
     "SQLImagePublisher": "MicrosoftSQLServer",
-    "SQLImageOffer": "SQL2014SP2-WS2012R2",
+    "SQLImageOffer": "SQL2017-WS2016",
     "WebOSDiskName": "WebOSDisk",
     "WebVM-2OSDiskName": "WebOSDisk2",
     "WebVmSize": "Standard_DS2_v2",
@@ -174,12 +174,10 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "WebOSDisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2017-06-01').primaryEndpoints.blob, variables('WebStorageAccountContainerName'), '/', variables('WebOSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+            "createOption": "fromImage",
+            "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+            }
           }
         },
         "networkProfile": {
@@ -249,7 +247,7 @@
       "name": "[parameters('SQLVMName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2018-06-01",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]"
@@ -274,12 +272,10 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "SQLOSDisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2017-06-01').primaryEndpoints.blob, variables('SQLStorageAccountContainerName'), '/', variables('SQLOSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+            "createOption": "fromImage",
+            "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+            }
           }
         },
         "networkProfile": {

@@ -11,7 +11,7 @@
     },
     "ADVMName": {
       "type": "string",
-      "defaultValue": "ADVM",
+      "defaultValue": "ADVM2",
       "minLength": 1
     },
     "adminUsername": {
