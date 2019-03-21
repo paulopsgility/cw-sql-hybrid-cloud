@@ -32,15 +32,15 @@
             }
         },
         "variables": {
-            "baseUri": "https://raw.githubusercontent.com/opsgility/cw-building-resilient-iaas-architecture/master/",
+            "baseUri": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master/",
             "ADInstallScript":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1",
-            "ADInstallScript2":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1",
+            "ADInstallScript2":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1"
         },
         "resources": [
             {
                 "name": "VirtualNetwork",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [],
                 "properties": {
                     "mode": "Incremental",
@@ -53,7 +53,7 @@
             {
                 "name": "ActiveDirectory",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/VirtualNetwork"
                 ],
@@ -82,7 +82,7 @@
             {
                 "name": "VirtualNetworkWithDNS",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/ActiveDirectory"
                 ],
@@ -97,7 +97,7 @@
             {
                 "name": "CloudShop",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/VirtualNetwork"
                 ],
@@ -112,7 +112,7 @@
             {
                 "name": "VirtualNetwork2",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [],
                 "resourceGroup": "[parameters('secondResourceGroup')]",
                 "properties": {
@@ -126,7 +126,7 @@
             {
                 "name": "ActiveDirectory2",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/VirtualNetwork2"
                 ],
@@ -156,7 +156,7 @@
             {
                 "name": "VirtualNetworkWithDNS2",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/ActiveDirectory2"
                 ],
@@ -172,7 +172,7 @@
             {
                 "name": "CloudShop2",
                 "type": "Microsoft.Resources/deployments",
-                "apiVersion": "2016-09-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/VirtualNetwork2"
                 ],
@@ -188,7 +188,7 @@
             {
                 "type": "Microsoft.Resources/deployments",
                 "name": "UpdateVNetPeeringToGround",
-                "apiVersion": "2016-02-01",
+                "apiVersion": "2017-05-10",
                 "dependsOn": [
                     "Microsoft.Resources/deployments/VirtualNetwork"
                 ],

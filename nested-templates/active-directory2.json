@@ -53,13 +53,7 @@
     }
   },
   "variables": {
-    "VNETNAME": "VNET1",
-    "DNSIP": "10.0.1.4",
-    "VNETPrefix": "10.0.0.0/16",
-    "VNETSubnet1Name": "Apps",
-    "VNETSubnet1Prefix": "10.0.0.0/24",
     "VNETSubnet2Name": "Identity",
-    "VNETSubnet2Prefix": "10.0.1.0/24",
     "vmstorageName": "[concat('adstorage', uniqueString(resourceGroup().id))]",
     "ADVMImagePublisher": "MicrosoftWindowsServer",
     "ADVMImageOffer": "WindowsServer",
@@ -72,8 +66,6 @@
     "scriptFolder": ".",
     "VM1scriptFileName": "deploy-ad.ps1",
     "VM1scriptParameters": "[concat(' -domain ', parameters('domainName'), ' -password ', parameters('adminPassword'))]",
-    "DomainJoinscriptFileName": "domain-join.ps1",
-    "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
     "advmipName": "advmip"
   },
   "resources": [
