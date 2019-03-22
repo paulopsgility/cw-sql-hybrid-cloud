@@ -6,7 +6,7 @@
                 "type": "string",
                 "defaultValue": "CloudShop2",
                 "metadata": {
-                    "description": "The name of the resource group that will host the DR site"
+                    "description": "The name of the resource group that will host the DR site. THIS RESOURCE GROUP MUST EXIST PRIOR TO DEPLOYMENT."
                 }
             },
             "adminUsername": {

@@ -83,7 +83,7 @@
     "SQL3SKU": "SQLDEV",
     "SQL3ImagePublisher": "MicrosoftSQLServer",
     "SQL3ImageOffer": "SQL2017-WS2016",
-    "sql3ipName": "sqlip",
+    "sql3ipName": "sql3ip",
     "SQL3OSDiskName": "SQLOSDisk2",
     "SQL3VmSize": "Standard_DS2_v2",
     "SQL3SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
