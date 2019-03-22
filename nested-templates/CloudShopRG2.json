@@ -87,8 +87,8 @@
     "SQL3OSDiskName": "SQLOSDisk2",
     "SQL3VmSize": "Standard_DS2_v2",
     "SQL3SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
-    "SQL3NicName": "[concat(parameters('SQL3VMName'), 'NetworkInterface')]"
-
+    "SQL3NicName": "[concat(parameters('SQL3VMName'), 'NetworkInterface')]",
+    "availabilitySetName": "sqlavset"
   },
   "resources": [
     {
@@ -104,6 +104,19 @@
       },
       "dependsOn": [],
       "kind": "Storage"
+    },
+    {
+      "name": "[variables('availabilitySetName')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+          "platformFaultDomainCount": 3,
+          "platformUpdateDomainCount": 5
+      },
+      "sku": {
+          "name": "Aligned"
+      }
     },
     {
       "name": "[variables('SQLNicName')]",
@@ -165,10 +178,11 @@
       "name": "[parameters('SQLVMName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2018-06-01",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "tags": {
         "displayName": "ContosoSQL2"
@@ -190,12 +204,10 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "SQLOSDisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2017-06-01').primaryEndpoints.blob, variables('SQLStorageAccountContainerName'), '/', variables('SQLOSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+            "createOption": "fromImage",
+            "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+            }
           }
         },
         "networkProfile": {
@@ -204,6 +216,9 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]"
             }
           ]
+        },
+        "availabilitySet": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
         }
       },
       "resources": [
@@ -237,10 +252,11 @@
       "name": "[parameters('SQL3VMName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2018-06-01",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('SQL3NicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('SQL3NicName'))]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "tags": {
         "displayName": "ContosoSQL3"
@@ -262,12 +278,10 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "SQL3OSDisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2017-06-01').primaryEndpoints.blob, variables('SQLStorageAccountContainerName'), '/', variables('SQL3OSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+            "createOption": "fromImage",
+            "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+            }
           }
         },
         "networkProfile": {
@@ -276,6 +290,9 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SQL3NicName'))]"
             }
           ]
+        },
+        "availabilitySet": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
         }
       },
       "resources": [
