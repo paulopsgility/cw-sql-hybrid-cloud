@@ -143,9 +143,6 @@
                         },
                         "domainName": {
                             "value": "[parameters('domainName')]"
-                        },
-                        "adInstallScriptUrl": {
-                            "value": "[variables('ADInstallScript2')]"
                         }
                     }
                 }
