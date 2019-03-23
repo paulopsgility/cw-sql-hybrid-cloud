@@ -125,7 +125,8 @@
                 "type": "Microsoft.Resources/deployments",
                 "apiVersion": "2017-05-10",
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/VirtualNetwork2"
+                    "Microsoft.Resources/deployments/VirtualNetwork2",
+                    "Microsoft.Resources/deployments/ActiveDirectory"
                 ],
                 "resourceGroup": "[parameters('secondResourceGroup')]",
                 "properties": {
