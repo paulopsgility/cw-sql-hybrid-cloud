@@ -1,4 +1,4 @@
-param($cloudShopUrl)
+param($domain, $user, $password, $cloudShopUrl)
 
 
 
@@ -62,3 +62,8 @@ New-ItemProperty -Path $HKLM -Name "DisableSecuritySettingsCheck" -Value 1 -Prop
 
 Stop-Process -Name Explorer
 Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+
+#Join Domain
+$password =  ConvertTo-SecureString "$password" -AsPlainText -Force
+$domCredential = New-Object System.Management.Automation.PSCredential("$domain\$user", $password)
+Add-Computer -DomainName "$domain" -Credential $domCredential -Restart -Force

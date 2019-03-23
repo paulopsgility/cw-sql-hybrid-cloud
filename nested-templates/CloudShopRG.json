@@ -35,14 +35,14 @@
       "metadata": {
         "description": "Zip that contains cloud shop sample"
       },
-      "defaultValue": "https://cloudworkshop.blob.core.windows.net/cw-sql-hybrid-cloud/CloudShop.zip"
+      "defaultValue": "https://cloudworkshop.blob.core.windows.net/sql-hybrid-cloud/CloudShop.zip"
     },
     "CloudShopDBDownloadUrl": {
       "type": "string",
       "metadata": {
         "description": "Zip that contains Adventure works DB sample"
       },
-      "defaultValue": "https://cloudworkshop.blob.core.windows.net/cw-sql-hybrid-cloud/AdventureWorks.bak"
+      "defaultValue": "https://cloudworkshop.blob.core.windows.net/sql-hybrid-cloud/AdventureWorks.bak"
     },
     "CloudShopInstallscriptUrl": {
       "type": "string",
