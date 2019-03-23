@@ -2,13 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vmstorageType": {
-      "type": "string",
-      "defaultValue": "Premium_LRS",
-      "allowedValues": [
-        "Premium_LRS"
-      ]
-    },
     "ADVMName": {
       "type": "string",
       "defaultValue": "ADVM1",
@@ -67,7 +60,7 @@
     "ADVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VNET1')]",
     "ADVMSubnetRef": "[concat(variables('ADVMVnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
     "ADVMStorageAccountContainerName": "vhds",
-    "ADVM1NicName": "[concat(parameters('ADVMName'), 'NetworkInterface')]",
+    "ADVMNicName": "[concat(parameters('ADVMName'), 'NetworkInterface')]",
     "scriptFolder": ".",
     "VM1scriptFileName": "deploy-ad.ps1",
     "VM1scriptParameters": "[concat(' -domain ', parameters('domainName'), ' -password ', parameters('adminPassword'))]",
@@ -77,6 +70,59 @@
     "labName": "sql-hybrid-cloud"
   },
   "resources": [
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('ADVMNicName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+          "Lab": "[variables('labName')]"
+      },
+      "properties": {
+          "ipConfigurations": [
+              {
+                  "name": "ipconfig1",
+                  "properties": {
+                      "privateIPAllocationMethod": "Static",
+                      "privateIPAddress": "[variables('DNSIP')]",
+                      "publicIPAddress": {
+                          "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('advmipName'))]"
+                      },
+                      "subnet": {
+                          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('VNETNAME'), variables('VNETSubnet2Name'))]"
+                      },
+                      "primary": true,
+                      "privateIPAddressVersion": "IPv4"
+                  }
+              }
+          ],
+          "primary": true
+      },
+      "dependsOn": [
+          "[resourceId('Microsoft.Network/publicIPAddresses', variables('advmipName'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks/', variables('VNETNAME'))]"
+      ]
+  },
+  {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "sku": {
+          "name": "Basic",
+          "tier": "Regional"
+      },
+      "name": "[variables('advmipName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+          "Lab": "[variables('labName')]"
+      },
+      "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Dynamic",
+          "idleTimeoutInMinutes": 4,
+          "ipTags": []
+      },
+      "dependsOn": []
+  },
     {
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('ADVMName')]",
@@ -131,13 +177,13 @@
           "networkProfile": {
               "networkInterfaces": [
                   {
-                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('ADVM1NicName'))]"
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('ADVMNicName'))]"
                   }
               ]
           }
       },
       "dependsOn": [
-          "[resourceId('Microsoft.Network/networkInterfaces', variables('ADVM1NicName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces', variables('ADVMNicName'))]",
           "[resourceId('Microsoft.Compute/disks/', variables('ADVMDATADiskName'))]"
       ],
       "resources": [
