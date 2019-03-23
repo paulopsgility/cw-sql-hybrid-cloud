@@ -1,4 +1,4 @@
-param($user, $password, $dbsource, $sqlConfigUrl)
+param($domain, $user, $password, $dbsource, $sqlConfigUrl)
 
 $logs    = "C:\Logs"
 $data    = "C:\Data"
@@ -11,6 +11,13 @@ $script  = "C:\Script"
 [system.io.directory]::CreateDirectory($script)
 [system.io.directory]::CreateDirectory("C:\SQLDATA")
 
+$sqlaccount = "NT Service\MSSQLSERVER"
+$localadmins = "BUILTIN\Administrators"
+secedit /export /cfg C:\secexport.txt /areas USER_RIGHTS
+$line = Get-Content C:\secexport.txt | Select-String 'SeManageVolumePrivilege'
+(Get-Content C:\secexport.txt).Replace($line,"$line,$sqlaccount,$localadmins") | Out-File C:\secimport.txt
+secedit /configure /db secedit.sdb /cfg C:\secimport.txt /overwrite /areas USER_RIGHTS /quiet
+
 $splitpath = $sqlConfigUrl.Split("/")
 $fileName = $splitpath[$splitpath.Length-1]
 $destinationPath = "$script\configure-sql.ps1"
@@ -18,18 +25,20 @@ $destinationPath = "$script\configure-sql.ps1"
 (New-Object Net.WebClient).DownloadFile($sqlConfigUrl,$destinationPath);
 
 # Get the Adventure works database backup 
-$dbdestination = "C:\SQLDATA\AdventureWorks2012.bak"
+$dbdestination = "C:\SQLDATA\AdventureWorks.bak"
 Invoke-WebRequest $dbsource -OutFile $dbdestination
 
 $password =  ConvertTo-SecureString "$password" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$user", $password)
 
-Enable-PSRemoting –force
+Enable-PSRemoting -force
 Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP-PUBLIC" -RemoteAddress Any
 Invoke-Command -FilePath $destinationPath -Credential $credential -ComputerName $env:COMPUTERNAME -ArgumentList "Password", $password
 Disable-PSRemoting -Force
 
-New-NetFirewallRule -DisplayName "SQL Server" -Direction Inbound –Protocol TCP –LocalPort 1433 -Action allow 
+New-NetFirewallRule -DisplayName "SQL Server" -Direction Inbound -Protocol TCP -LocalPort 1433 -Action allow 
+New-NetFirewallRule -DisplayName "SQL AG Endpoint" -Direction Inbound -Protocol TCP -LocalPort 5022 -Action allow 
+New-NetFirewallRule -DisplayName "SQL AG Load Balancer Probe Port" -Direction Inbound -Protocol TCP -LocalPort 59999 -Action allow 
 
 # Disable IE Enhanced Security Configuration
 $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
@@ -61,3 +70,8 @@ New-ItemProperty -Path $HKLM -Name "DisableSecuritySettingsCheck" -Value 1 -Prop
 
 Stop-Process -Name Explorer
 Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
+
+#Join Domain
+$password =  ConvertTo-SecureString "$password" -AsPlainText -Force
+$domCredential = New-Object System.Management.Automation.PSCredential("$domain\$user", $password)
+Add-Computer -DomainName "$domain" -Credential $domCredential -Restart -Force

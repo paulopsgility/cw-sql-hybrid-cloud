@@ -1,5 +1,5 @@
 param($password)
-$dbdestination = "C:\SQLDATA\AdventureWorks2012.bak"
+$dbdestination = "C:\SQLDATA\AdventureWorks.bak"
 # Setup the data, backup and log directories as well as mixed mode authentication
 Import-Module "sqlps" -DisableNameChecking
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo")
@@ -15,6 +15,8 @@ Restart-Service -Name "MSSQLSERVER" -Force
 # Re-enable the sa account and set a new password to enable login
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER LOGIN sa ENABLE" 
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER LOGIN sa WITH PASSWORD = 'demo@pass123'"
+Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "CREATE LOGIN [BUILTIN\Administrators] FROM WINDOWS"
+Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER SERVER ROLE sysadmin ADD MEMBER [BUILTIN\Administrators]"
 
 $sqlServerSnapinVersion = (Get-Command Restore-SqlDatabase).ImplementingType.Assembly.GetName().Version.ToString()
 $assemblySqlServerSmoExtendedFullName = "Microsoft.SqlServer.SmoExtended, Version=$sqlServerSnapinVersion, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
