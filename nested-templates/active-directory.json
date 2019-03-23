@@ -99,8 +99,7 @@
           "primary": true
       },
       "dependsOn": [
-          "[resourceId('Microsoft.Network/publicIPAddresses', variables('advmipName'))]",
-          "[resourceId('Microsoft.Network/virtualNetworks/', variables('VNETNAME'))]"
+          "[resourceId('Microsoft.Network/publicIPAddresses', variables('advmipName'))]"
       ]
   },
   {
