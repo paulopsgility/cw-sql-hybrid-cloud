@@ -122,6 +122,21 @@
       },
       "dependsOn": []
   },
+  {
+    "type": "Microsoft.Compute/disks",
+    "name": "[variables('ADVMDATADiskName')]",
+    "apiVersion": "2017-03-30",
+    "location": "[resourceGroup().location]",
+    "sku": {
+        "name": "Premium_LRS"
+    },
+    "properties": {
+        "creationData": {
+            "createOption": "Empty"
+        },
+        "diskSizeGB": 20
+    }
+},
     {
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('ADVMName')]",
