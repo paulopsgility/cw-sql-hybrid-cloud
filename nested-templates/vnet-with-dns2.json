@@ -5,7 +5,7 @@
   },
   "variables": {
     "VNETNAME": "VNET2",
-    "DNSIP": "172.16.2.4",
+    "DNSIP": "10.0.2.4",
     "VNETPrefix": "172.16.0.0/16",
     "VNETSubnet1Name": "Apps",
     "VNETSubnet1Prefix": "172.16.0.0/24",
