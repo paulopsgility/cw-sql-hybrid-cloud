@@ -17,7 +17,7 @@
                 }
             },
             "adminPassword": {
-                "type": "securestring",
+                "type": "string",
                 "defaultValue": "demo@pass123",
                 "metadata": {
                     "description": "The password for the administrator account of the new VM and domain"
@@ -32,9 +32,7 @@
             }
         },
         "variables": {
-            "baseUri": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master/",
-            "ADInstallScript":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1",
-            "ADInstallScript2":"https://raw.githubusercontent.com/opsgility/introduction-to-nested-templates/master/script-extensions/deploy-ad.ps1"
+            "baseUri": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master/"
         },
         "resources": [
             {
@@ -125,8 +123,7 @@
                 "type": "Microsoft.Resources/deployments",
                 "apiVersion": "2017-05-10",
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/VirtualNetwork2",
-                    "Microsoft.Resources/deployments/ActiveDirectory"
+                    "Microsoft.Resources/deployments/VirtualNetworkWithDNS2"
                 ],
                 "resourceGroup": "[parameters('secondResourceGroup')]",
                 "properties": {
@@ -153,7 +150,9 @@
                 "type": "Microsoft.Resources/deployments",
                 "apiVersion": "2017-05-10",
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/ActiveDirectory2"
+                    "Microsoft.Resources/deployments/ActiveDirectory",
+                    "Microsoft.Resources/deployments/UpdateVNetPeeringToGround",
+                    "Microsoft.Resources/deployments/UpdateVNetPeeringToCloud"
                 ],
                 "resourceGroup": "[parameters('secondResourceGroup')]",
                 "properties": {
@@ -185,7 +184,8 @@
                 "name": "UpdateVNetPeeringToGround",
                 "apiVersion": "2017-05-10",
                 "dependsOn": [
-                    "Microsoft.Resources/deployments/VirtualNetwork"
+                    "Microsoft.Resources/deployments/VirtualNetwork",
+                    "Microsoft.Resources/deployments/VirtualNetwork2"
                 ],
                 "properties": {
                     "mode": "Incremental",
@@ -212,8 +212,7 @@
                 "apiVersion": "2017-05-10",
                 "resourceGroup": "[parameters('secondResourceGroup')]",
                 "dependsOn": [
-                    "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetPeeringToGround')]",
-                    "Microsoft.Resources/deployments/VirtualNetwork2"
+                    "Microsoft.Resources/deployments/UpdateVNetPeeringToGround"
                 ],
                 "properties": {
                     "mode": "Incremental",
