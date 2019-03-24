@@ -72,6 +72,7 @@ Stop-Process -Name Explorer
 Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -ForegroundColor Green
 
 #Join Domain
-$password =  ConvertTo-SecureString "$password" -AsPlainText -Force
-$domCredential = New-Object System.Management.Automation.PSCredential("$domain\$user", $password)
+$spassword =  ConvertTo-SecureString "$password" -AsPlainText -Force
+$domainusername = "CONTOSO\demouser"
+$domCredential = New-Object System.Management.Automation.PSCredential($domainusername, $spassword)
 Add-Computer -DomainName "$domain" -Credential $domCredential -Restart -Force
