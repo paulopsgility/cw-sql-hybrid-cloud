@@ -81,7 +81,7 @@
     "SQLImagePublisher": "MicrosoftSQLServer",
     "SQLImageOffer": "SQL2017-WS2016",
     "SQLOSDiskName": "SQLOSDisk2",
-    "SQLVmSize": "Standard_DS2_v2",
+    "SQLVmSize": "Standard_D2s_v3",
     "SQLSubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
     "SQLStorageAccountContainerName": "vhds",
     "SQLNicName": "[concat(parameters('SQLVMName'), 'NetworkInterface')]",
@@ -92,7 +92,7 @@
     "SQL3ImageOffer": "SQL2017-WS2016",
     "sql3ipName": "sql3ip",
     "SQL3OSDiskName": "SQLOSDisk2",
-    "SQL3VmSize": "Standard_DS2_v2",
+    "SQL3VmSize": "Standard_D2s_v3",
     "SQL3SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
     "SQL3NicName": "[concat(parameters('SQL3VMName'), 'NetworkInterface')]",
     "availabilitySetName": "sqlavset"
