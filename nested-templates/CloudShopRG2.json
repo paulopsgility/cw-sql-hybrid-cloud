@@ -74,7 +74,7 @@
     "VNETSubnet2Name": "Data",
     "VNETNAME": "VNET2",
     "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('VNETNAME'))]",
-    "CloudShopDBInstallScriptFileName": "deploy-cloudshop-db.ps1",
+    "CloudShopDBInstallScriptFileName": "deploy-cloudshop-db2.ps1",
     "CloudShopDBInstallScriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'), ' -dbsource ', parameters('CloudShopDBDownloadUrl'), ' -sqlConfigUrl ', parameters('SQLConfigscriptUrl'))]",
     "vmstorageName": "[concat('chqdisks', uniqueString(resourceGroup().id))]",
     "SQLSKU": "SQLDEV",

@@ -32,7 +32,7 @@
             }
         },
         "variables": {
-            "baseUri": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master/"
+            "baseUri": "https://raw.githubusercontent.com/opsgility/cw-sql-hybrid-cloud/master"
         },
         "resources": [
             {
