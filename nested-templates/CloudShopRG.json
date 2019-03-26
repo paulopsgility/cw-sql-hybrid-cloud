@@ -106,7 +106,8 @@
     "SQLNicName": "[concat(parameters('SQLVMName'), 'NetworkInterface')]",
     "scriptFolder": ".",
     "webipName": "webip",
-    "sqlipName": "sqlip"
+    "sqlipName": "sqlip",
+    "availabilitySetName": "sqlavset"
 
   },
   "resources": [
@@ -123,6 +124,19 @@
       },
       "dependsOn": [],
       "kind": "Storage"
+    },
+    {
+      "name": "[variables('availabilitySetName')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+          "platformFaultDomainCount": 3,
+          "platformUpdateDomainCount": 5
+      },
+      "sku": {
+          "name": "Aligned"
+      }
     },
     {
       "name": "[variables('WebNicName')]",
@@ -257,7 +271,8 @@
       "apiVersion": "2018-06-01",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "tags": {
         "displayName": "ContosoSQL1"
@@ -291,6 +306,9 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SQLNicName'))]"
             }
           ]
+        },
+        "availabilitySet": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
         }
       },
       "resources": [

@@ -95,7 +95,7 @@
     "SQL3VmSize": "Standard_D2s_v3",
     "SQL3SubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",
     "SQL3NicName": "[concat(parameters('SQL3VMName'), 'NetworkInterface')]",
-    "availabilitySetName": "sqlavset"
+    "availabilitySetName": "sqlavset2"
   },
   "resources": [
     {
