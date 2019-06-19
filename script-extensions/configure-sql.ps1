@@ -12,6 +12,10 @@ $sqlesq.Alter()
 
 # Restart the SQL Server service
 Restart-Service -Name "MSSQLSERVER" -Force
+
+# Make sure SQL has time to restart
+Start-Sleep -s 30
+
 # Re-enable the sa account and set a new password to enable login
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER LOGIN sa ENABLE" 
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER LOGIN sa WITH PASSWORD = 'demo@pass123'"

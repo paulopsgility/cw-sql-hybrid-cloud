@@ -12,17 +12,13 @@ $sqlesq.Alter()
 
 # Restart the SQL Server service
 Restart-Service -Name "MSSQLSERVER" -Force
+
+# Make sure SQL has time to restart
+Start-Sleep -s 30
+
 # Re-enable the sa account and set a new password to enable login
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER LOGIN sa ENABLE" 
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER LOGIN sa WITH PASSWORD = 'demo@pass123'"
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "CREATE LOGIN [BUILTIN\Administrators] FROM WINDOWS"
 Invoke-Sqlcmd -ServerInstance Localhost -Database "master" -Query "ALTER SERVER ROLE sysadmin ADD MEMBER [BUILTIN\Administrators]"
 
-# $sqlServerSnapinVersion = (Get-Command Restore-SqlDatabase).ImplementingType.Assembly.GetName().Version.ToString()
-# $assemblySqlServerSmoExtendedFullName = "Microsoft.SqlServer.SmoExtended, Version=$sqlServerSnapinVersion, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
-
-# $mdf = New-Object "Microsoft.SqlServer.Management.Smo.RelocateFile, $assemblySqlServerSmoExtendedFullName"('AdventureWorks2012', "C:\Data\AdventureWorks2012.mdf")
-# $ldf = New-Object "Microsoft.SqlServer.Management.Smo.RelocateFile, $assemblySqlServerSmoExtendedFullName"('AdventureWorks2012_Log', "C:\Logs\AdventureWorks2012.ldf")
-
-# Restore the database from the backup
-# Restore-SqlDatabase -ServerInstance Localhost -Database AdventureWorks -BackupFile $dbdestination -RelocateFile @($mdf,$ldf)  
