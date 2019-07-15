@@ -29,6 +29,9 @@ $destinationPath = "$script\configure-sql2.ps1"
 $dbdestination = "C:\SQLDATA\AdventureWorks.bak"
 # Invoke-WebRequest $dbsource -OutFile $dbdestination
 
+# Add a 5 min delay to accommodate drift in SQL image configuration. 
+Start-Sleep -s 300
+
 $password =  ConvertTo-SecureString "$password" -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTERNAME\$user", $password)
 
