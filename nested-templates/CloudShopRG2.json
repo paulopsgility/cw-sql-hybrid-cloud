@@ -79,7 +79,7 @@
     "vmstorageName": "[concat('chqdisks', uniqueString(resourceGroup().id))]",
     "SQLSKU": "SQLDEV",
     "SQLImagePublisher": "MicrosoftSQLServer",
-    "SQLImageOffer": "SQL2017-WS2016",
+    "SQLImageOffer": "SQL2019-WS2019",
     "SQLOSDiskName": "SQLOSDisk2",
     "SQLVmSize": "Standard_D2s_v3",
     "SQLSubnetRef": "[concat(variables('VnetID'), '/subnets/', variables('VNETSubnet2Name'))]",

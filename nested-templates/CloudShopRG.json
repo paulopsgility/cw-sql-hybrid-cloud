@@ -92,7 +92,7 @@
     "WindowsImageOffer": "WindowsServer",
     "SQLSKU": "SQLDEV",
     "SQLImagePublisher": "MicrosoftSQLServer",
-    "SQLImageOffer": "SQL2017-WS2016",
+    "SQLImageOffer": "SQL2019-WS2019",
     "WebOSDiskName": "WebOSDisk",
     "WebVM-2OSDiskName": "WebOSDisk2",
     "WebVmSize": "Standard_D2s_v3",
